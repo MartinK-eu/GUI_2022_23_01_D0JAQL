@@ -1,12 +1,15 @@
-﻿using RayCaster.Models;
+﻿using RayCaster.Logic;
+using RayCaster.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace RayCaster.Renderer
 {
@@ -14,6 +17,7 @@ namespace RayCaster.Renderer
     {
         public IGameModel model;
         Size size;
+        int fov = 60;
 
         public void Resize(Size size)
         {
@@ -27,60 +31,67 @@ namespace RayCaster.Renderer
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            if (size.Width > 50 && size.Height > 50)
+            Random rng = new Random();
+            if (model.InMapMode)
             {
-                Random rng = new Random();
-                if (model.InMapMode)
-                {
-                    double rectWidth = size.Width / model.MapMatrix.GetLength(1);
-                    double rectHeight = size.Height / model.MapMatrix.GetLength(0);
+                double rectSize = size.Height / model.MapMatrix.GetLength(0);
+                double horizontalOffset = size.Width / 4;
 
-                    for (int i = 0; i < model.MapMatrix.GetLength(0); i++)
+                for (int i = 0; i < model.MapMatrix.GetLength(0); i++)
+                {
+                    for (int j = 0; j < model.MapMatrix.GetLength(1); j++)
                     {
-                        for (int j = 0; j < model.MapMatrix.GetLength(1); j++)
+                        switch (model.MapMatrix[i, j])
                         {
-                            switch (model.MapMatrix[i, j])
-                            {
-                                case 0:
-                                    break;
-                                case 1:
-                                    drawingContext.DrawRectangle(Brushes.Blue, new Pen(Brushes.Black, 0),
-                                        new Rect(j * rectWidth, i*rectHeight, rectWidth, rectHeight));
-                                    break;
-                                default:
-                                    break;
-                            }
+                            case 0:
+                                break;
+                            case 1:
+                                drawingContext.DrawRectangle(Brushes.Blue, new Pen(Brushes.Black, 0),
+                                    new Rect(horizontalOffset + j * rectSize, i* rectSize, rectSize, rectSize));
+                                break;
+                            default:
+                                break;
                         }
                     }
-
-
-
-                    drawingContext.PushTransform(new RotateTransform(model.Player.LookAngle, 
-                        model.Player.PozX * (size.Width / model.MapMatrix.GetLength(0)) + 2.5, model.Player.PozY * (size.Height / model.MapMatrix.GetLength(1)) + 2.5));
-                    drawingContext.DrawRectangle(Brushes.Red, new Pen(Brushes.Black, 0),
-                                        new Rect(model.Player.PozX * (size.Width / model.MapMatrix.GetLength(0)), model.Player.PozY * (size.Height / model.MapMatrix.GetLength(1)), 5, 5));
-                    drawingContext.Pop();
-
-                    drawingContext.PushTransform(new RotateTransform(model.Player.LookAngle, model.Player.PozX * (size.Width / model.MapMatrix.GetLength(0)) + 2.5, model.Player.PozY * (size.Height / model.MapMatrix.GetLength(0)) + 2.5));
-                    drawingContext.DrawLine(new Pen(Brushes.Black, 2.5), new Point(model.Player.PozX * (size.Width / model.MapMatrix.GetLength(0)) + 2.5, model.Player.PozY * (size.Height / model.MapMatrix.GetLength(0)) + 2.5), new Point(model.Player.PozX * (size.Width / model.MapMatrix.GetLength(0)) + 12.5, model.Player.PozY * (size.Height / model.MapMatrix.GetLength(0)) + 12.5));
-                    drawingContext.Pop();
-                }
-                else
-                {
-                    double rectWidth = size.Width / 5;
-                    double rectHeight = size.Height;
-
-
-                    for (int i = 0; i < size.Width / 5; i++)
-                    {
-                        drawingContext.DrawRectangle(Brushes.Blue, new Pen(Brushes.Black, 0),
-                            new Rect(i * 5, 0, rectWidth, rectHeight));
-                    }
-
-                    /*drawingContext.DrawRectangle(new SolidColorBrush(Color.FromRgb((byte)rng.Next(1, 254), (byte)rng.Next(1, 254), (byte)rng.Next(1, 254))), new Pen(Brushes.Black, 0),
-                            new Rect(1, 0, rectWidth, rectHeight));*/
                 }
 
+                double ellipseRange = 5;
+                var playerCenter = new Point(horizontalOffset + model.Player.PozX * rectSize - ellipseRange / 2, model.Player.PozY * rectSize - ellipseRange / 2);
+                drawingContext.DrawEllipse(Brushes.Red, new Pen(Brushes.Black, 1),playerCenter,ellipseRange,ellipseRange);  
+
+                DrawRays(drawingContext, playerCenter, rectSize);
+            }
+            else
+            {
+                DrawWalls( drawingContext);
+            }
+        }
+        private void DrawRays(DrawingContext drawingContext,Point playerCenter,double rectSize)
+        {
+            double rectWidth = 10;
+            for (double rayDir = model.Player.LookAngle - fov / 2; rayDir <= model.Player.LookAngle + fov / 2; rayDir += rectWidth / size.Width * fov)
+            {
+                double lineLength = RayCalculator.CalculateRayLength(model.Player.PozX, model.Player.PozY, Math.Cos(GameLogic.ToRadians(rayDir)), -Math.Sin(GameLogic.ToRadians(rayDir)), model.MapMatrix, out int blockFace) * rectSize;
+
+                var lineEnd = new Point(playerCenter.X + Math.Cos(GameLogic.ToRadians(rayDir)) * lineLength, playerCenter.Y - Math.Sin(GameLogic.ToRadians(rayDir)) * lineLength);
+                drawingContext.DrawLine(new Pen(blockFace == 1 ? Brushes.Blue : Brushes.DarkBlue, 1), playerCenter, lineEnd);
+            }
+        }
+        private void DrawWalls(DrawingContext drawingContext)
+        {
+            double rectWidth = 15;
+
+            double rectX = 0;
+            for (double rayDir = model.Player.LookAngle - fov / 2; rayDir <= model.Player.LookAngle + fov / 2; rayDir += rectWidth / size.Width * fov)
+            {
+                double rayLength = RayCalculator.CalculateRayLength(model.Player.PozX, model.Player.PozY, Math.Cos(GameLogic.ToRadians(rayDir)), -Math.Sin(GameLogic.ToRadians(rayDir)), model.MapMatrix, out int blockFace);
+
+                double rectHeight = size.Height / rayLength;
+                if(rectHeight > size.Height) rectHeight = size.Height;
+
+                drawingContext.DrawRectangle(blockFace == 1 ? Brushes.Blue : Brushes.DarkBlue, new Pen(Brushes.Black, 0), new Rect(rectX, size.Height / 2 - rectHeight / 2, rectWidth, rectHeight));
+
+                rectX += rectWidth;
             }
         }
     }

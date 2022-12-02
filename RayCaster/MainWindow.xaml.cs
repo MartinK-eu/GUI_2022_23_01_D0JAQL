@@ -3,9 +3,9 @@ using RayCaster.Models;
 using RayCaster.Renderer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,7 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
+using System.Windows.Forms;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace RayCaster
 {
@@ -31,9 +32,9 @@ namespace RayCaster
             logic = new GameLogic();
             display.SetupModel(logic.model);
 
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(16.6666667);
+            Timer timer = new Timer();
             timer.Tick += Timer_Tick;
+            timer.Interval = 1;
             timer.Start();
         }
 
@@ -42,7 +43,6 @@ namespace RayCaster
             display.Resize(new Size(grid.ActualWidth, grid.ActualHeight));
             display.InvalidateVisual();
             Input();
-
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

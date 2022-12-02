@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Automation.Text;
+using System.Diagnostics;
 
 namespace RayCaster.Logic
 {
@@ -21,14 +22,12 @@ namespace RayCaster.Logic
 
         public GameLogic()
         {
-            this.model = new GameModel(MapGenerator(), new Character(1,1,0.1,new Vector(0, 9), 0), false);
-            model.Player.MoveDirection.Normalize();
-
+            model = new GameModel(MapGenerator(), new Character(1,1,0.1,new Vector(0, 1), 0), true);
         }
 
         public int[,] MapGenerator()
         {
-            string[] lines = File.ReadAllLines("map1.txt");
+            string[] lines = File.ReadAllLines(@"..\..\..\Assets\map.txt");
 
             int[,] matrix = new int[lines.Length, lines.Length];
             for (int i = 0; i < matrix.GetLength(0); i++)
@@ -60,22 +59,26 @@ namespace RayCaster.Logic
             switch (control)
             {
                 case Controls.Left:
-                    model.Player.LookAngle += 5;
-                    break;
-                case Controls.Right:
                     model.Player.LookAngle -= 5;
                     break;
+                case Controls.Right:
+                    model.Player.LookAngle += 5;
+                    break;
                 case Controls.W:
-                    model.Player.PozY -= model.Player.Speed;
+                    model.Player.PozY -= Math.Sin(ToRadians(model.Player.LookAngle)) * model.Player.Speed;
+                    model.Player.PozX += Math.Cos(ToRadians(model.Player.LookAngle)) * model.Player.Speed;
                     break;
                 case Controls.A:
-                    model.Player.PozX -= model.Player.Speed;
+                    model.Player.PozY -= Math.Sin(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
+                    model.Player.PozX += Math.Cos(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
                     break;
                 case Controls.S:
-                    model.Player.PozY += model.Player.Speed;
+                    model.Player.PozY += Math.Sin(ToRadians(model.Player.LookAngle)) * model.Player.Speed;
+                    model.Player.PozX -= Math.Cos(ToRadians(model.Player.LookAngle)) * model.Player.Speed;
                     break;
                 case Controls.D:
-                    model.Player.PozX += model.Player.Speed;
+                    model.Player.PozY += Math.Sin(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
+                    model.Player.PozX -= Math.Cos(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
                     break;
                 case Controls.Map:
                     model.InMapMode = !model.InMapMode;
@@ -83,6 +86,11 @@ namespace RayCaster.Logic
                 default:
                     break;
             }
+            Debug.WriteLine(model.Player.LookAngle);
+        }
+        public static double ToRadians(double angle)
+        {
+            return angle * Math.PI / 180.0;
         }
     }
 }

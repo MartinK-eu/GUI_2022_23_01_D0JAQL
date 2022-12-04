@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:RayCaster"
         xmlns:renderer="clr-namespace:RayCaster.Renderer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" MouseDoubleClick="Window_MouseDoubleClick" KeyDown="Window_KeyDown">
+        Title="MainWindow" Height="450" Width="800" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" MouseDoubleClick="Window_MouseDoubleClick" KeyDown="Window_KeyDown"
+        Background="DimGray">
     <Grid x:Name="grid">
         <renderer:Display x:Name="display"/>
     </Grid>

@@ -18,6 +18,10 @@ namespace RayCaster.Renderer
         public IGameModel model;
         Size size;
         int fov = 60;
+        static SolidColorBrush wallColor = new SolidColorBrush(Color.FromRgb(148,142,68));
+        static SolidColorBrush sideWallColor = new SolidColorBrush(Color.FromRgb(114, 109, 44));
+        static SolidColorBrush floorColor = new SolidColorBrush(Color.FromRgb(76, 58, 11));
+        static SolidColorBrush ceilingColor = Brushes.DarkKhaki;
 
         public void Resize(Size size)
         {
@@ -37,6 +41,9 @@ namespace RayCaster.Renderer
                 double rectSize = size.Height / model.MapMatrix.GetLength(0);
                 double horizontalOffset = size.Width / 4;
 
+                drawingContext.DrawRectangle(floorColor, new Pen(Brushes.Black, 0),
+                                    new Rect(0, 0, size.Width, size.Height));
+
                 for (int i = 0; i < model.MapMatrix.GetLength(0); i++)
                 {
                     for (int j = 0; j < model.MapMatrix.GetLength(1); j++)
@@ -46,7 +53,7 @@ namespace RayCaster.Renderer
                             case 0:
                                 break;
                             case 1:
-                                drawingContext.DrawRectangle(Brushes.Blue, new Pen(Brushes.Black, 0),
+                                drawingContext.DrawRectangle(wallColor, new Pen(Brushes.Black, 0),
                                     new Rect(horizontalOffset + j * rectSize, i* rectSize, rectSize, rectSize));
                                 break;
                             default:
@@ -63,6 +70,10 @@ namespace RayCaster.Renderer
             }
             else
             {
+                drawingContext.DrawRectangle(floorColor, new Pen(Brushes.Black, 0),
+                                    new Rect(0, size.Height / 2, size.Width, size.Height / 2));
+                drawingContext.DrawRectangle(ceilingColor, new Pen(Brushes.Black, 0),
+                                    new Rect(0, 0, size.Width, size.Height / 2));
                 DrawWalls( drawingContext);
             }
         }
@@ -79,7 +90,7 @@ namespace RayCaster.Renderer
         }
         private void DrawWalls(DrawingContext drawingContext)
         {
-            double rectWidth = 15;
+            double rectWidth = 2;
 
             double rectX = 0;
             for (double rayDir = model.Player.LookAngle - fov / 2; rayDir <= model.Player.LookAngle + fov / 2; rayDir += rectWidth / size.Width * fov)
@@ -89,7 +100,7 @@ namespace RayCaster.Renderer
                 double rectHeight = size.Height / rayLength;
                 if(rectHeight > size.Height) rectHeight = size.Height;
 
-                drawingContext.DrawRectangle(blockFace == 1 ? Brushes.Blue : Brushes.DarkBlue, new Pen(Brushes.Black, 0), new Rect(rectX, size.Height / 2 - rectHeight / 2, rectWidth, rectHeight));
+                drawingContext.DrawRectangle(blockFace == 1 ? wallColor : sideWallColor, new Pen(Brushes.Black, 0), new Rect(rectX, size.Height / 2 - rectHeight / 2, rectWidth, rectHeight));
 
                 rectX += rectWidth;
             }

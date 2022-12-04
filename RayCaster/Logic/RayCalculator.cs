@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -75,7 +76,16 @@ namespace RayCaster.Logic
                     face = 1;
                 }
 
-                hit = map[mapY,mapX] == 1;
+                try
+                {
+                    hit = map[mapY, mapX] == 1;
+
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine(mapY + ", " + mapX);
+                    throw;
+                }
             }
             if (face == 0) rayDistance -= xDeltaDist;
             else rayDistance -= yDeltaDist;

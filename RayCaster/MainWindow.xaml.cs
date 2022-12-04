@@ -34,7 +34,7 @@ namespace RayCaster
 
             Timer timer = new Timer();
             timer.Tick += Timer_Tick;
-            timer.Interval = 1;
+            timer.Interval = 16; //base = 1, 60fps = 16ms, 30 = 33ms, 24fps = 41ms
             timer.Start();
         }
 

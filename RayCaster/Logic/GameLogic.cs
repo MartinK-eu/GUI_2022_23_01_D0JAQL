@@ -22,7 +22,7 @@ namespace RayCaster.Logic
 
         public GameLogic()
         {
-            model = new GameModel(MapGenerator(), new Character(1,1,0.1,new Vector(0, 1), 0), true);
+            model = new GameModel(MapGenerator(), new Character(1, 1, 0.07, new Vector(0, 1), 0), true);
         }
 
         public int[,] MapGenerator()
@@ -56,6 +56,8 @@ namespace RayCaster.Logic
 
         public void Control(Controls control)
         {
+            double oldPozX = model.Player.PozX;
+            double oldPozY = model.Player.PozY;
             switch (control)
             {
                 case Controls.Left:
@@ -69,16 +71,16 @@ namespace RayCaster.Logic
                     model.Player.PozX += Math.Cos(ToRadians(model.Player.LookAngle)) * model.Player.Speed;
                     break;
                 case Controls.A:
-                    model.Player.PozY -= Math.Sin(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
-                    model.Player.PozX += Math.Cos(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
+                    model.Player.PozY += Math.Sin(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
+                    model.Player.PozX -= Math.Cos(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
                     break;
                 case Controls.S:
                     model.Player.PozY += Math.Sin(ToRadians(model.Player.LookAngle)) * model.Player.Speed;
                     model.Player.PozX -= Math.Cos(ToRadians(model.Player.LookAngle)) * model.Player.Speed;
                     break;
                 case Controls.D:
-                    model.Player.PozY += Math.Sin(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
-                    model.Player.PozX -= Math.Cos(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
+                    model.Player.PozY -= Math.Sin(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
+                    model.Player.PozX += Math.Cos(ToRadians(model.Player.LookAngle + 90)) * model.Player.Speed;
                     break;
                 case Controls.Map:
                     model.InMapMode = !model.InMapMode;
@@ -86,7 +88,26 @@ namespace RayCaster.Logic
                 default:
                     break;
             }
-            Debug.WriteLine(model.Player.LookAngle);
+
+            if (PlayerHitsWall(model.Player.PozX, model.Player.PozY, model.MapMatrix))
+            {
+                model.Player.PozX = oldPozX;
+                model.Player.PozY = oldPozY;
+            }
+            Debug.WriteLine("X: " + model.Player.PozX);
+            Debug.WriteLine("Y: " + model.Player.PozY);
+        }
+
+        private bool PlayerHitsWall(double pozX, double pozY, int[,] matrix)
+        {
+            Debug.WriteLine("roudned down x: " + (int)Math.Floor(pozX));
+            Debug.WriteLine("roudned down y: " + (int)Math.Floor(pozY));
+
+            Debug.WriteLine(matrix[(int)Math.Floor(pozX), (int)Math.Floor(pozY)]);
+            if (matrix[(int)Math.Floor(pozY), (int)Math.Floor(pozX)] > 0)
+                return true;
+            else
+                return false;
         }
         public static double ToRadians(double angle)
         {

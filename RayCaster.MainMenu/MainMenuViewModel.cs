@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,26 +13,26 @@ namespace RayCaster.MainMenu
     public class MainMenuViewModel : ObservableRecipient
     {
         public MainMenuLogic logic;
-        private MainMenuModel model;
 
-        public MainMenuModel Model
+        private ObservableCollection<LeaderboardItem> leaderboardItems;
+
+        public ObservableCollection<LeaderboardItem> LeaderboardItmes
         {
-            get { return model; }
-            set { SetProperty(ref model, value); }
+            get { return leaderboardItems; }
+            set { SetProperty(ref leaderboardItems, value); }
         }
+
 
         public MainMenuViewModel()
         {
             logic = new MainMenuLogic();
-            model = new MainMenuModel();
-
-            model.LongestTime = TimeSpan.Zero;
+            LeaderboardItmes = logic.LoadLeaderBoard();
 
             StartGame = new RelayCommand
             (
                 () => 
                 { 
-                    model.LongestTime = logic.StartGame(model.LongestTime); 
+                    LeaderboardItmes.Add(logic.StartGame()); 
                 }
             );
             ShowContext = new RelayCommand
@@ -40,12 +41,17 @@ namespace RayCaster.MainMenu
             );
             ShowLeaderboard = new RelayCommand
             (
-                () => { logic.ShowLeaderboard(); }
+                () => { logic.ShowLeaderboard(leaderboardItems); }
             );
 
         }
         public ICommand StartGame { get; set; }
         public ICommand ShowContext { get; set; }
         public ICommand ShowLeaderboard { get; set; }
+
+        internal void SaveLeaderBoard()
+        {
+            logic.SaveLEaderBoard(LeaderboardItmes);
+        }
     }
 }

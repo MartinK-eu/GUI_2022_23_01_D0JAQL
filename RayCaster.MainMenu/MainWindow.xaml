@@ -5,16 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RayCaster.MainMenu"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="350" WindowStyle="ToolWindow">
+        Title="MainWindow" Height="450" Width="350" WindowStyle="None"
+        WindowStartupLocation="CenterScreen">
     <Window.DataContext>
-        <local:MainMenuViewModel/>
+        <local:MainMenuViewModel x:Name="viewModel"/>
     </Window.DataContext>
     <StackPanel>
         <Label Content="Welcome to the Backrooms!" HorizontalAlignment="Center" FontSize="24" Margin="20" ></Label>
-        <Label Content="{Binding Model.LongestTime}" ContentStringFormat="Longest time spent in the Backrooms: {0}" HorizontalAlignment="Center"></Label>
 
         <Button Margin="10" Height="50" Content="NoClip out of reality" FontSize="18" Command="{Binding StartGame}"></Button>
         <Button Margin="10" Height="50" Content="Where am I?" FontSize="18" Command="{Binding ShowContext}"></Button>
-        <Button Margin="10" Height="50" Content="Get me out!" FontSize="18"></Button>
+        <Button Margin="10" Height="50" Content="List of Lost Souls" FontSize="18" Command="{Binding ShowLeaderboard}"></Button>
+        <Button Margin="10" Height="50" Content="Get me out!" FontSize="18" Click="Button_Click"></Button>
     </StackPanel>
 </Window>

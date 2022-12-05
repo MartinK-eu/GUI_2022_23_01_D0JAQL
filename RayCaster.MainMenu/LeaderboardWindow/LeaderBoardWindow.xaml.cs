@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,27 +10,25 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RayCaster.MainMenu
+namespace RayCaster.MainMenu.LeaderboardWindow
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for LeaderBoardWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LeaderBoardWindow : Window
     {
-        public MainWindow()
+        public LeaderBoardWindow(ObservableCollection<LeaderboardItem> leaderboardItems)
         {
             InitializeComponent();
+            listbox.ItemsSource = leaderboardItems;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.SaveLeaderBoard();
-            this.Close();
+            this.DialogResult = true;
         }
     }
 }

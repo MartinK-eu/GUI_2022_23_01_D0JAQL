@@ -12,21 +12,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace RayCaster.MainMenu
+namespace RayCaster.MainMenu.AskForName
 {
     /// <summary>
-    /// Interaction logic for ContextWindow.xaml
+    /// Interaction logic for AskForNameWindow.xaml
     /// </summary>
-    public partial class ContextWindow : Window
+    public partial class AskForNameWindow : Window
     {
-        public ContextWindow()
+        public AskForNameWindow(LeaderboardItem leaderboardItem)
         {
             InitializeComponent();
+            stack.DataContext = leaderboardItem;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+            DialogResult = true;
         }
     }
 }

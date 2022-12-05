@@ -90,7 +90,7 @@ namespace RayCaster.Renderer
         }
         private void DrawWalls(DrawingContext drawingContext)
         {
-            double rectWidth = 2;
+            double rectWidth = 1; //to set wall smoothness
 
             double rectX = 0;
             for (double rayDir = model.Player.LookAngle - fov / 2; rayDir <= model.Player.LookAngle + fov / 2; rayDir += rectWidth / size.Width * fov)

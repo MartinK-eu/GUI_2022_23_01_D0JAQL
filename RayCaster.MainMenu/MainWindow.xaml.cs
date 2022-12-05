@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace RayCaster.MainMenu
 {
     /// <summary>
-    /// Interaction logic for MainMenu.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainMenu : Window
+    public partial class MainWindow : Window
     {
-        public MainMenu()
+        public MainWindow()
         {
             InitializeComponent();
         }

@@ -14,7 +14,7 @@ namespace RayCaster.Logic
 {
     public enum Controls
     {
-        Left, Right, W, A, S, D, Map
+        Left, Right, W, A, S, D, Map, ESC
     }
     public class GameLogic
     {
@@ -22,12 +22,12 @@ namespace RayCaster.Logic
 
         public GameLogic()
         {
-            model = new GameModel(MapGenerator(), new Character(1, 1, 0.07, new Vector(0, 1), 0), true);
+            model = new GameModel(MapGenerator(), new Character(1, 1, 0.07, new Vector(0, 1), 0), false);
         }
 
         public int[,] MapGenerator()
         {
-            string[] lines = File.ReadAllLines(@"..\..\..\Assets\map.txt");
+            string[] lines = File.ReadAllLines(@"..\..\..\..\RayCaster\Assets\map.txt");
 
             int[,] matrix = new int[lines.Length, lines.Length];
             for (int i = 0; i < matrix.GetLength(0); i++)

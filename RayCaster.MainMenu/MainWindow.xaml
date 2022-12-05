@@ -1,19 +1,20 @@
-﻿<Window x:Class="RayCaster.MainMenu.MainMenu"
+﻿<Window x:Class="RayCaster.MainMenu.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RayCaster.MainMenu"
         mc:Ignorable="d"
-        Title="MainMenu" Height="450" Width="350">
+        Title="MainWindow" Height="450" Width="350" WindowStyle="ToolWindow">
     <Window.DataContext>
         <local:MainMenuViewModel/>
     </Window.DataContext>
     <StackPanel>
         <Label Content="Welcome to the Backrooms!" HorizontalAlignment="Center" FontSize="24" Margin="20" ></Label>
-        <Button Margin="10" Height="50" Content="NoClip out of reality" FontSize="18"></Button>
-        <Button Margin="10" Height="50" Content="Where am I?" FontSize="18"></Button>
-        <Button Margin="10" Height="50" Content="List of Lost People" FontSize="18"></Button>
+        <Label Content="{Binding Model.LongestTime}" ContentStringFormat="Longest time spent in the Backrooms: {0}" HorizontalAlignment="Center"></Label>
+
+        <Button Margin="10" Height="50" Content="NoClip out of reality" FontSize="18" Command="{Binding StartGame}"></Button>
+        <Button Margin="10" Height="50" Content="Where am I?" FontSize="18" Command="{Binding ShowContext}"></Button>
         <Button Margin="10" Height="50" Content="Get me out!" FontSize="18"></Button>
     </StackPanel>
 </Window>

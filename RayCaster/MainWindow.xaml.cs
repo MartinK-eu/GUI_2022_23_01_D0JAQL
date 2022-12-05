@@ -36,6 +36,8 @@ namespace RayCaster
             timer.Tick += Timer_Tick;
             timer.Interval = 16; //base = 1, 60fps = 16ms, 30 = 33ms, 24fps = 41ms
             timer.Start();
+
+
         }
 
         private void Timer_Tick(object? sender, EventArgs e)
@@ -81,6 +83,11 @@ namespace RayCaster
         {
             if (Keyboard.IsKeyDown(Key.M))
                 logic.Control(Controls.Map);
+            if (Keyboard.IsKeyDown(Key.Escape))
+            {
+                this.DialogResult = true;
+            }
+
         }
     }
 }

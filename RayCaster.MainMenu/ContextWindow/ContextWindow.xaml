@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RayCaster.MainMenu.ContextWindow"
         mc:Ignorable="d"
-        Title="ContextWindow" Height="380" Width="300" WindowStyle="None"
+        Title="ContextWindow" Height="580" Width="300" WindowStyle="None"
         WindowStartupLocation="CenterScreen">
     <StackPanel>
         <TextBlock HorizontalAlignment="Center" FontSize="18" Margin="15" TextWrapping="Wrap"  Text="The backrooms is an urban legend that describes a world full of mazes. It is characterized
 by walls with a monochromatic tone of yellow, the smell of moist carpet and a feeling of being lost.
 The Backrooms have no known way out, it is said the anyone who ends up there is destined to search for an exit they will never find. Good Luck!"></TextBlock>
+        <Image Source="reference.png" Margin="5"></Image>
         <Button Content="Back to Main Menu" Height="35" Margin="15" Click="Button_Click"></Button>
     </StackPanel>
 </Window>

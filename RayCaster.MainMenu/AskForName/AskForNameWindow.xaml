@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RayCaster.MainMenu.AskForName"
         mc:Ignorable="d"
         Title="AskForNameWindow" Height="130" Width="200"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" WindowStyle="None">
     <StackPanel x:Name="stack">
         <Label Content="Enter your name!" HorizontalAlignment="Center" Margin="5"></Label>
         <TextBox Text="{Binding Name}" Margin="10"></TextBox>
